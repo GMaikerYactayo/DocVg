@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+    <head>
+        <title>LogIn</title>
+        <h:outputStylesheet library="css" name="theme.css" />
+        <h:outputStylesheet library="fa" name="font-awesome.css" />
+        <h:outputStylesheet library="css"  name="layout-green-light.css"/>
+        <link href="../../resources/css/theme.css" rel="stylesheet" type="text/css"/>
+        <link href="../../resources/css/layout-green-light.css" rel="stylesheet" type="text/css"/>
+        <link href="../../resources/css/nanoscroller.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <h:body class="login-body">
+        <p:growl showDetail="true" id="message"/>
+        <h:form id="form">
+            <div class="body-container">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-6 left-side">
+                        <p:graphicImage name="/images/LogoVG.png"  alt="" class="logo"/>
+                        <h1>Bienvenido</h1>
+                        <p>
+                            Inicia sesión para comenzar
+                        </p>
+                    </div>
+                    <div class="ui-g-12 ui-lg-6 right-side">
+                        <div class="login-wrapper">
+                            <div class="login-container">
+                                <span class="title">Login</span>
+
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12">
+                                        <p:inputText id="USERNAME" value="#{loginC.USEUSU}" placeholder="Usuario" required="true" requiredMessage="Usuario vacio" class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all"/>
+                                    </div>
+                                    <div class="ui-g-12">
+                                        <p:password value="#{loginC.PSWUSU}" placeholder="Contraseña"  required="true" requiredMessage="Contraseña vacia" class="ui-inputfield ui-password ui-widget ui-state-default ui-corner-all" />
+                                    </div>
+                                    <div class="ui-g-6">
+                                        <p:commandButton icon="fa fa-fw fa-check" id="btnlogin" actionListener="#{loginC.startSession()}" value="INICIAR SESIÓN" update=":message :form"/>
+                                    </div>
+                                    <div class="ui-g-6 password-container">
+                                        <a href="#" class="ui-link ui-widget">Olvido su contraseña?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>

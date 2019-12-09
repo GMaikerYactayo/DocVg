@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <h:head>
+
+        <f:event type="preRenderView" listener="#{loginC.securitySession()}"/>
+
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="icon" href="" sizes="32x32"/>
+
+
+        <h:outputStylesheet library="css" name="theme.css" />
+        <h:outputStylesheet library="css" name="nanoscroller.css" />
+        <h:outputStylesheet library="fa" name="font-awesome.css" />
+        <h:outputStylesheet library="inputswitch" name="inputswitch.css" />
+
+        <h:outputScript library="js" name="jsfcrud.js" />
+        <h:outputScript library="inputswitch" name="inputswitch.js"/>
+        <h:outputScript library="js" name="layout.js"/>
+        <h:outputScript library="js" name="nanoscroller.js"/>
+        <h:outputStylesheet library="css"  name="layout-green-light.css"/> 
+
+        <!--Script Propios-->
+        <h:outputScript library="js" name="script.js" />
+        <h:outputScript library="js" name="calendar.js" />
+        <!--        <h:outputScript library="js" name="all.js"/>-->
+        <h:outputScript library="js" name="calculosInformacionDetalle.js"/>
+        <!--***-->        
+        <title>DocVG - Valle Grande</title>
+        <style type="text/css">
+            .ui-growl {
+                z-index: 999999 !important;
+            }
+        </style>
+    </h:head>  
+    <h:body>
+        <!--        <p:growl widgetVar="growlId" life="3000" ><p:autoUpdate/></p:growl>-->
+        <p:growl id="growl" life="3000" widgetVar="growlId"><p:autoUpdate/></p:growl>
+
+        <h:form>
+            <p:confirmDialog  global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton  value="Si" type="button" styleClass="ui-confirmdialog-yes"  />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>
+        </h:form>
+        <div class="layout-wrapper layout-overlay">
+            <ui:include src="Topbar.xhtml"/>
+            <ui:include src="Menu.xhtml"/>
+            <div class="layout-content">
+                <h:form>
+                    <div class="layout-breadcrumb">
+                        <ul>
+                            <li>
+                            <p:link outcome="/vistas/Grafica/Grafica">
+                            </p:link>
+                            </li>
+                            <ui:insert name="breadcrumb" />
+                        </ul>
+                        <div class="layout-breadcrumb-options">
+                            <!--                            <a href="#" title="Backup"><i class="fa fa-cloud-upload"></i></a>
+                                                        <a href="#" title="Bookmark"><i class="fa fa-bookmark"></i></a>-->
+                            <h:commandLink  actionListener="#{loginC.cerrar()}" title="Cerrar sesion">
+                                <i class="fa fa-sign-out"></i>
+                            </h:commandLink>
+                        </div>
+                    </div>
+                </h:form>
+                <p:ajaxStatus style="height:6px">
+                    <f:facet name="start">
+                        <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+                    </f:facet>
+                </p:ajaxStatus>
+                <div class="layout-content-container">
+                    <ui:insert name="content"/>
+                </div>
+            </div>
+
+            <ui:include src="Footer.xhtml"/>
+            <div class="layout-mask"></div> 
+        </div>
+    </h:body>
+</html>
+
+
+

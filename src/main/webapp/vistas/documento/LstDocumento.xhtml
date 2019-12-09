@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <h:head>
+        <title>Registro de Documento</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../Template/Template.xhtml">
+            <ui:define name="content">
+                <h1 style="margin-top:0">
+                    <center>
+                        REGISTRAR DOCUMENTO
+                    </center>
+                </h1>
+                <p:growl showDetail="true" id="messages" />
+                <center>
+                    <h:form id="formIns">
+                        <p:panelGrid columns="4">
+                            <p:outputLabel for="Asu" value="Asunto: " style="font-weight:bold"/>
+                            <p:selectOneMenu id="Asu" value="#{documentoC.documento.CODTIPDOC}" style="width: 330px" required="true" requiredMessage="Se requiere asunto" styleClass="custom-filter">
+                                <f:selectItem itemLabel="SELECCIONE" itemValue="" />
+                                <f:selectItems value="#{tipDocC.listadoTip}" var="A" itemLabel="#{A.ASUTIPDOC}" itemValue="#{A.ASUTIPDOC}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="Emp" value="Empresa " style="font-weight:bold"/>
+                            <p:autoComplete id="Emp" value="#{documentoC.documento.CODPER}" size="65" completeMethod="#{documentoC.completeTextDetalleEmpresa}" 
+                                            required="true" requiredMessage="Se requiere empresa"/>
+                            <p:outputLabel for="button" value="Fecha de viaje/visita: " style="font-weight:bold"/>
+                            <p:calendar id="button" value="#{documentoC.fechaFormulario}" required="true" requiredMessage="Se requiere fecha" showOn="button" navigator="true" pattern="dd/MMM/yyyy" 
+                                        style="width: 400px" disabled="#{!documentoC.activo}" autocomplete="off" readonlyInput="true" locale="es"/>
+                            <p:outputLabel for="Desc"  value="Descripción: " style="font-weight:bold"/>
+                            <p:inputTextarea id="Desc" value="#{documentoC.documento.DESDOC}" required="true" requiredMessage="Se requiere descripción" counter="display" style="width: 490px" maxlength="300" 
+                                             disabled="#{!documentoC.activo}" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                            <p:outputLabel for="Hora" value="Hora de viaje/visita: " style="font-weight:bold"/>
+                            <p:inputMask id="Hora" value="#{documentoC.documento.HORVIADOC}" required="true" requiredMessage="Se requiere hora" mask="99:99" disabled="#{!documentoC.activo}"/>
+                            <p:column >
+                                <p:selectBooleanCheckbox value="#{documentoC.activo}" title="Ingresar viaje / visita" style="margin-right: 20px;">
+                                    <p:ajax update="button" event="change"/>
+                                    <p:ajax update="Hora" event="change"/>
+                                    <p:ajax update="Desc" event="change"/>
+                                    <p:ajax update="btn" event="change"/>
+                                </p:selectBooleanCheckbox>
+                            </p:column>
+                            <h:outputText id="display" />
+                        </p:panelGrid>
+                        <p:commandButton id="aaa" value="Registrar" disabled="#{documentoC.habi}" actionListener="#{documentoC.registrar()}" update="formIns :form:dtTable @this"/> 
+                        <p:button id="btn" value="Asignar grupo" disabled="#{!documentoC.habi}" outcome="/vistas/aula/LstAula.xhtml"/> 
+                    </h:form>
+                </center>
+                <p:spacer/>
+
+                <p:spacer/>
+                <h:form id="form">
+                    <p:dataTable value="#{documentoC.listadoDoc}" 
+                                 var="lista" 
+                                 widgetVar="ASUNTO"
+                                 id="dtTable" 
+                                 expandableRowGroups="true"
+                                 selectionMode="single"
+                                 filteredValue="#{documentoC.listadoDoc2}"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 paginator="true" 
+                                 emptyMessage="No hay registro"
+                                 rowKey="#{lista.IDDOC}"
+                                 rows="8" 
+                                 selection="#{documentoC.select}"
+                                 style="margin-bottom:20px">
+
+                        <f:facet name="header">
+                            DOCUMENTOS 
+                        </f:facet>
+
+                        <p:column style="width: 20px" >
+                            <p:rowToggler/>
+                        </p:column>
+                        <p:rowExpansion >
+                            <p:panelGrid  columns="2" columnClasses="label,value" style="width:470px">
+                                <h:outputText value="FECHA DEL VIAJE/VISITA" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.FECVIADOC}" />                                                                                                                                        
+                                <h:outputText value="HORA DEL VIAJE" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.HORVIADOC}" />                                                                                                                                        
+                                <h:outputText value="DESCRIPCIÓN" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.DESDOC}" />                                                                                                                                        
+                            </p:panelGrid>
+                        </p:rowExpansion>
+
+                        <p:column headerText="FECHA DEL DOCUMENTO" style="width: 150px;text-align:center">
+                            <h:outputText value="#{lista.FECDOC}" style="font-weight:bold"/>
+                        </p:column>
+                        <p:column filterBy="#{lista.CODTIPDOC}" style="width: 400px;text-align:center"  headerText="ASUNTO"  >
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('ASUNTO').filter()" style="width: 335px" styleClass="custom-filter" > 
+                                    <f:selectItem itemLabel="TODOS LOS ASUNTOS" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{tipDocC.listadoTip}" var="A" itemLabel="#{A.ASUTIPDOC}" itemValue="#{A.ASUTIPDOC}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{lista.CODTIPDOC}" />
+                        </p:column>
+                        <p:column filterBy="#{lista.CODPER}" headerText="EMPRESA - EXTERNO" style="text-align:center" >
+                            <h:outputText value="#{lista.CODPER}" />
+                        </p:column>
+                        <p:column style="width: 30px;text-align:center"> 
+                            <p:commandButton id="ver" update=":dlgDatos :dlgGrupo2" style="background: #0076c5" actionListener="#{documentoC.listarGruDoc2a(lista.IDDOC)}" oncomplete="PF('wdlgGrupo2').show()" icon="ui-icon-search" />
+                            <p:tooltip id="toolTipFade" for="ver" value="Ver grupo" position="top"/>
+                        </p:column >
+                        <p:column style="width: 140px">
+                            <p:commandButton id="Doc" value="Doc." icon="fa fa-fw fa-file-pdf-o" style="background: #ff3300" actionListener="#{documentoC.REPORTE_PDF_PRACTICA(lista.CODTIPDOC,lista.IDDOC)}" ajax="false"/>
+                            <p:tooltip id="toolTipDoc" for="Doc" value="Generar reporte" position="top"/>
+                            <p:commandButton id="Grupo" value="Grupo" icon="fa fa-fw fa-file-pdf-o" style="background: #ff3300" actionListener="#{documentoC.REPORTE_PDF_GRUPO(lista.CODTIPDOC,lista.IDDOC)}" ajax="false"/>
+                            <p:tooltip id="toolTipGrupo" for="Grupo" value="Generar reporte" position="top"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(documentoC.listadoDoc)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable>
+                    <p:contextMenu for="dtTable">
+                        <p:menuitem value="Modificar" update=":dlgDatos" icon="ui-icon-pencil"  oncomplete="PF('wdlgDatos').show()" />
+                        <p:menuitem value="Eliminar" update=":messages :form:dtTable" oncomplete="PF('ASUNTO').clearFilters()" icon="ui-icon-circle-close" action="#{documentoC.eliminar()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas eliminar?" icon="fa fa-fw fa-exclamation-triangle"/>
+                        </p:menuitem>
+                    </p:contextMenu>
+                </h:form>
+
+                <p:dialog id="dlgDatos" modal="true" widgetVar="wdlgDatos" >
+                    <center>
+                        <h1 style="margin-top:0">
+                            ACTUALIZAR DOCUMENTO
+                        </h1>
+                        <h:form>
+                            <p:panelGrid columns="4">
+                                <p:outputLabel for="Asu" value="Asunto: " style="font-weight:bold"/>
+                                <p:selectOneMenu id="Asu" value="#{documentoC.select.CODTIPDOC}" style="width: 330px" required="true" requiredMessage="Se requiere asunto" styleClass="custom-filter">
+                                    <f:selectItem itemLabel="SELECCIONE" itemValue="" />
+                                    <f:selectItems value="#{tipDocC.listadoTip}" var="A" itemLabel="#{A.ASUTIPDOC}" itemValue="#{A.ASUTIPDOC}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="Emp" value="Empresa " style="font-weight:bold"/>
+                                <p:autoComplete id="Emp" value="#{documentoC.select.CODPER}" size="65" completeMethod="#{documentoC.completeTextDetalleEmpresa}" 
+                                                required="true" requiredMessage="Se requiere empresa"/>
+                                <p:outputLabel for="button" value="Fecha de viaje/visita: " style="font-weight:bold"/>
+                                <p:calendar id="button" value="#{documentoC.fechaFormulario}" required="true" requiredMessage="Se requiere fecha" showOn="button" navigator="true" pattern="dd/MMM/yyyy" 
+                                            style="width: 400px" disabled="#{!documentoC.activo}" autocomplete="off" readonlyInput="true" locale="es"/>
+                                <p:outputLabel for="Desc" value="Descripción: " style="font-weight:bold"/>
+                                <p:inputTextarea id="Desc" value="#{documentoC.select.DESDOC}" required="true" requiredMessage="Se requiere descripción" counter="display" style="width: 490px" maxlength="300" 
+                                                 disabled="#{!documentoC.activo}" counterTemplate="{0} caracteres restantes." autoResize="false" />
+                                <p:outputLabel for="Hora" value="Hora de viaje/visita: " style="font-weight:bold"/>
+                                <p:inputMask id="Hora" value="#{documentoC.select.HORVIADOC}" required="true" requiredMessage="Se requiere hora" mask="99:99" disabled="#{!documentoC.activo}"/>
+                                <p:column>
+                                    <p:selectBooleanCheckbox value="#{documentoC.activo}" title="Ingresar viaje / visita" style="margin-right: 20px;">
+                                        <p:ajax update="button" event="change"/>
+                                        <p:ajax update="Hora" event="change"/>
+                                        <p:ajax update="Desc" event="change"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>
+                                <h:outputText id="display" />
+                            </p:panelGrid>
+                            <p:commandButton value="Actualizar" actionListener="#{documentoC.modificar()}" update=":messages :form:dtTable" 
+                                             oncomplete="if(args &amp;&amp; !args.validationFailed)PF('wdlgDatos').hide();PF('ASUNTO').clearFilters()">
+                                <p:tooltip trackMouse="true"/>
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                        </h:form>
+                    </center>
+                </p:dialog>
+
+
+                <p:dialog id="dlgGrupo2" widgetVar="wdlgGrupo2" modal="true" >
+                    <h:form id="formGru2">
+                        <p:dataTable id="dtGrupo" var="ls" emptyMessage="No hay grupo en este documento" style="width: 600px" value="#{documentoC.listadoGruDoc2}">
+                            <f:facet name="header">
+                                GRUPO
+                            </f:facet> 
+                            <p:column headerText="NOMBRES Y APELLIDOS" >
+                                <center>
+                                    <h:outputText value="#{ls.PERSONA}" />
+                                </center>
+                            </p:column>
+                            <p:column headerText="DNI" style="width: 90px">
+                                <center>
+                                    <h:outputText value="#{ls.DNI}" />
+                                </center>
+                            </p:column>
+                            <p:column headerText="TIPO" style="width: 90px">
+                                <center>
+                                    <h:outputText value="#{ls.TIPO}" />
+                                </center>
+                            </p:column>
+                            <f:facet name="footer">
+                                EN TOTAL HAY #{fn:length(documentoC.listadoGruDoc2)} REGISTROS.
+                            </f:facet>
+                        </p:dataTable>
+                    </h:form>
+                </p:dialog>
+
+                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

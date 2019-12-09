@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <h:head>
+        <title>Asignación de responsable</title>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="../Template/Template.xhtml">
+            <ui:define name="content">
+                <h1 style="margin-top:0">
+                    <center>
+                        REGISTRAR PROFESIONAL
+                    </center>
+                </h1>
+                <p:growl showDetail="true" id="messages" />
+                <center>
+                    <h:form id="formIns">
+                        <p:panelGrid columns="6">
+                            <p:outputLabel for="DNI" value="DNI: " style="font-weight:bold"/>
+                            <p:inputText id="DNI" value="#{personaC.persona.DNIPER}"  maxlength="8" >
+                                <f:validator validatorId="validarExistenciaPersona" />
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="Nom" value="Nombre(s): " style="font-weight:bold"/>
+                            <p:inputText id="Nom" value="#{personaC.persona.NOMPER}" maxlength="30" required="true" requiredMessage="Se requiere nombre(s)">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ _á_é_í_ó_ú]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="Ape" value="Apellidos: " style="font-weight:bold"/>
+                            <p:inputText id="Ape" value="#{personaC.persona.APEPER}" maxlength="40" required="true" requiredMessage="Se requiere apellidos">
+                                <p:keyFilter regEx="/[A-Z_a-z_ñ _á_é_í_ó_ú]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="Tit" value="Titulo: " style="font-weight:bold"/>
+                            <p:inputText id="Tit" value="#{personaC.persona.TITPER}" maxlength="20" required="true" requiredMessage="Se requiere titulo"/>
+                            <p:outputLabel for="Cel" value="Celular: " style="font-weight:bold"/>
+                            <p:inputText id="Cel" value="#{personaC.persona.CELPER}" maxlength="9" >
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="Emp" value="Empresa: " style="font-weight:bold"/>
+                            <p:autoComplete id="Emp" value="#{personaC.persona.CODEMP}" size="40" completeMethod="#{personaC.completeTextEmpresa}" 
+                                            required="true" requiredMessage="Se requiere empresa"/>
+                            <p:outputLabel for="Car" value="Cargo: " style="font-weight:bold"/>
+                            <p:inputText id="Car" value="#{personaC.persona.CARPER}" maxlength="75" required="true" requiredMessage="Se requiere cargo"/>
+                            <p:outputLabel for="Tel" value="Teléfono: " style="font-weight:bold"/>
+                            <p:inputText id="Tel" value="#{personaC.persona.TELEMP}" maxlength="17"/>
+                            <p:outputLabel value="Correo: " style="font-weight:bold"/>
+                            <p:inputText value="#{personaC.persona.CORPER}" size="40" maxlength="60"/>
+                            <p:outputLabel value="Dirección: " style="font-weight:bold"/>
+                            <p:inputText value="#{personaC.persona.DIRPER}" size="40" maxlength="100" />
+                        </p:panelGrid>
+                        <p:commandButton value="Registrar" actionListener="#{personaC.registrarP()}" update="formIns :form:dtTable"/> 
+                    </h:form>
+                </center>
+
+                <div align="right">
+                    <h:form id="estadosExternos">
+                        <p:commandButton value="Activo"
+                                         id="btnActivo"
+                                         style="background: black"
+                                         oncomplete="PF('TIPO').clearFilters()"
+                                         actionListener="#{personaC.listarExternos('A')}"
+                                         update=":form:dtTable"/>
+
+                        <p:commandButton value="Inactivo"
+                                         id="btnInactivo"
+                                         style="background: black"
+                                         oncomplete="PF('TIPO').clearFilters()"
+                                         actionListener="#{personaC.listarExternos('I')}"
+                                         update=":form:dtTable"/>
+                    </h:form>
+                </div>
+
+                <p:spacer/>
+                <h:form id="form">
+                    <p:dataTable value="#{personaC.listadoPerExt}" 
+                                 var="lista" 
+                                 widgetVar="TIPO"
+                                 id="dtTable" 
+                                 sortBy="#{lista.CODEMP}"
+                                 expandableRowGroups="true"
+                                 selectionMode="single"
+                                 filteredValue="#{personaC.listadoPerExt2}"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 paginator="true" 
+                                 rowKey="#{lista.CODPER}"
+                                 rows="8" 
+                                 emptyMessage="No hay registro"
+                                 selection="#{personaC.select}"
+                                 style="margin-bottom:20px">
+
+                        <f:facet name="header">
+                            <div align="right">
+                                <h:commandLink rendered="#{personaC.bt}" actionListener="#{personaC.REPORTE_PDF_EXTERNO(CodigoAlumno)}" >
+                                    <p:graphicImage url="../../icon/PDF-logo.png" width="50" title="Descargar Reporte"/>
+                                </h:commandLink>
+                            </div>
+                            PROFESIONALES
+                        </f:facet>
+                        <p:column style="width: 40px" >
+                            <p:rowToggler/>
+                        </p:column>
+                        <p:rowExpansion >
+                            <p:panelGrid  columns="2" columnClasses="label,value" style="width:470px">
+                                <h:outputText value="TELÉFONO / CELULAR" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.TELEMP} / #{lista.CELPER}" />                                                                                                                                        
+                                <h:outputText value="CORREO" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.CORPER}" />                                                                                                                                        
+                                <h:outputText value="DNI" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.DNIPER}" />                                                                                                                                        
+                                <h:outputText value="DIRECCIÓN" style="font-weight:bold"/>
+                                <h:outputText value="#{lista.DIRPER}" />                                                                                                                                        
+                            </p:panelGrid>
+                        </p:rowExpansion>
+
+                        <p:column headerText="TÍTULO" style="width:55px; text-align:center">
+                            <h:outputText value="#{lista.TITPER}" />
+                        </p:column>
+                        <p:column headerText="APELLIDOS Y NOMBRES" style="text-align:center" filterBy="#{lista.APEPER}, #{lista.NOMPER}" filterMatchMode="contains">
+                            <h:outputText value="#{lista.APEPER}, #{lista.NOMPER}" />
+                        </p:column>
+
+                        <p:column headerText="CARGO" style="text-align:center" >
+                            <h:outputText value="#{lista.CARPER}" />
+                        </p:column>
+
+                        <p:column headerText="EMPRESA" style="text-align:center" filterBy="#{lista.CODEMP}" filterMatchMode="contains">
+                            <h:outputText value="#{lista.CODEMP}" />
+                        </p:column>
+
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(personaC.listadoPerExt)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable>
+                    <p:contextMenu id="Botones" for="dtTable">
+                        <p:autoUpdate/>
+                        <p:menuitem value="Modificar" update=":dlgDatos" rendered="#{personaC.bt}" icon="ui-icon-pencil"  oncomplete="PF('wdlgDatos').show()"/>
+                        <p:menuitem value="Desactivar" update=":messages :form:dtTable" oncomplete="PF('TIPO').clearFilters()" rendered="#{personaC.bt}" icon="ui-icon-circle-close" action="#{personaC.eliminar()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas eliminar?"/>
+                        </p:menuitem>
+                        <p:menuitem value="Activar" rendered="#{!personaC.bt}" update=":messages :form:dtTable" 
+                                    icon="ui-icon-circle-check" oncomplete="PF('TIPO').clearFilters()" action="#{personaC.activar()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas activar?" />
+                        </p:menuitem>
+                    </p:contextMenu>
+                </h:form>
+
+                <p:dialog id="dlgDatos" modal="true" widgetVar="wdlgDatos" >
+                    <center>
+                        <h2 style="margin-top:0">
+                            ACTUALIZAR PROFESIONAL
+                        </h2>
+                        <h:form>
+                            <p:panelGrid columns="6">
+                                <p:outputLabel for="DNI" value="DNI" style="font-weight:bold"/>
+                                <p:inputText id="DNI" value="#{personaC.select.DNIPER}" maxlength="8" >
+                                    <p:keyFilter regEx="/[0-9]/"/>
+                                </p:inputText>
+                                <p:outputLabel for="Nom" value="Nombre(s): " style="font-weight:bold"/>
+                                <p:inputText id="Nom" value="#{personaC.select.NOMPER}" maxlength="30" required="true" requiredMessage="Se requiere nombre(s)">
+                                    <p:keyFilter regEx="/[A-Z_a-z_ñ _á_é_í_ó_ú]/"/>
+                                </p:inputText>
+                                <p:outputLabel for="Ape" value="Apellidos: " style="font-weight:bold"/>
+                                <p:inputText id="Ape" value="#{personaC.select.APEPER}" maxlength="40" required="true" requiredMessage="Se requiere apellidos">
+                                    <p:keyFilter regEx="/[A-Z_a-z_ñ _á_é_í_ó_ú]/"/>
+                                </p:inputText>
+                                <p:outputLabel for="Tit" value="Titulo: " style="font-weight:bold"/>
+                                <p:inputText id="Tit" value="#{personaC.select.TITPER}" maxlength="20" required="true" requiredMessage="Se requiere titulo"/>
+                                <p:outputLabel for="Cel" value="Celular: " style="font-weight:bold"/>
+                                <p:inputText id="Cel" value="#{personaC.select.CELPER}" maxlength="9" >
+                                    <p:keyFilter regEx="/[0-9]/"/>
+                                </p:inputText>
+                                <p:outputLabel for="Emp" value="Empresa: " style="font-weight:bold"/>
+                                <p:autoComplete id="Emp" value="#{personaC.select.CODEMP}" size="40" completeMethod="#{personaC.completeTextEmpresa}" 
+                                                required="true" requiredMessage="Se requiere empresa"/>
+                                <p:outputLabel for="Car" value="Cargo: " style="font-weight:bold"/>
+                                <p:inputText id="Car" value="#{personaC.select.CARPER}" maxlength="75" required="true" requiredMessage="Se requiere cargo"/>
+                                <p:outputLabel for="Tel" value="Teléfono: " style="font-weight:bold"/>
+                                <p:inputText id="Tel" value="#{personaC.select.TELEMP}" maxlength="17" />
+                                <p:outputLabel value="Correo: " style="font-weight:bold"/>
+                                <p:inputText value="#{personaC.select.CORPER}" size="40" maxlength="60"/>
+                                <p:outputLabel value="Dirección: " style="font-weight:bold"/>
+                                <p:inputText value="#{personaC.select.DIRPER}" size="40" maxlength="100" />
+                            </p:panelGrid>
+                            <p:commandButton value="Actualizar" actionListener="#{personaC.modificar()}"
+                                             update=":messages :form:dtTable" oncomplete="if(args &amp;&amp; !args.validationFailed)PF('wdlgDatos').hide();PF('TIPO').clearFilters()">
+                                <p:tooltip trackMouse="true"/>
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                        </h:form>
+                    </center>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+

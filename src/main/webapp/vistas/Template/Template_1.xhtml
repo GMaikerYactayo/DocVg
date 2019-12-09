@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <h:head>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="icon" href="./../../resources/icon/group.png" sizes="32x32"/>
+        <!--Other CSS and JS-->
+        <!--        <h:outputStylesheet library="css"  name="materialize.min.css"/>-->
+        <h:outputStylesheet library="css"  name="IconFontsMaterialize.css"/>
+        <h:outputStylesheet library="css"  name="style.css"/>
+        <h:outputScript library="js" name="jsfcrud.js" />
+        <!--***-->
+        <!--CSS and JS - Van en esta Posicion para que funcione bien-->
+        <h:outputStylesheet library="css"  name="fontawesome-all.css"/>
+        <h:outputStylesheet library="css"  name="charts.css"/>
+        <h:outputStylesheet library="css"  name="clock.css"/>
+        <h:outputStylesheet library="css"  name="components.css"/>
+        <h:outputStylesheet library="css"  name="cultivo.css"/>
+        <h:outputStylesheet library="css"  name="fileupload.css"/>
+        <h:outputStylesheet library="css"  name="galleria.css"/>
+        <h:outputStylesheet library="css"  name="inputswitch.css"/>
+        <h:outputStylesheet library="css"  name="keyboard.css"/>
+        <h:outputStylesheet library="css"  name="nanoscroller.css"/>
+        <h:outputStylesheet library="css"  name="ripple.css"/>
+        <h:outputStylesheet library="css"  name="schedule.css"/>
+        <h:outputStylesheet library="css"  name="scrollpanel.css"/>
+        <h:outputStylesheet library="css"  name="animate.css"/>
+        <h:outputStylesheet library="css"  name="layout-dark-green.css"/>
+        <h:outputStylesheet library="css"  name="theme-dark-green.css"/>
+
+        <!--Estilos propios-->
+        <h:outputStylesheet library="css"  name="estilos.css"/>
+
+
+        <h:outputScript library="js" name="charts.js" />
+        <h:outputScript library="js" name="clock.js" />
+        <h:outputScript library="js" name="components.js" />
+        <h:outputScript library="js" name="core.js" />
+        <h:outputScript library="js" name="fileupload.js" />
+        <h:outputScript library="js" name="galleria.js" />
+        <h:outputScript library="js" name="inputswitch.js" />
+        <h:outputScript library="js" name="keyboard.js" />
+        <h:outputScript library="js" name="layout.js" />
+        <h:outputScript library="js" name="moment.js" />
+        <h:outputScript library="js" name="nanoscroller.js" />
+        <h:outputScript library="js" name="raphael.js" />
+        <h:outputScript library="js" name="ripple.js" />
+        <h:outputScript library="js" name="schedule.js" />
+        <h:outputScript library="js" name="scrollpanel.js" />
+        <h:outputScript library="js" name="swipe.js" />
+        <h:outputScript library="js" name="touchswipe.js" />
+
+
+        <!--Script Propios-->
+        <h:outputScript library="js" name="script.js" />
+        <h:outputScript library="js" name="calendar.js" />
+
+        <h:outputScript library="js" name="all.js"/>
+        <h:outputScript library="js" name="calculosInformacionDetalle.js"/>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.bundle.js"/>
+        <script rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.bundle.min.js"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.css"/>
+        <script rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.js"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.min.css"/>
+        <script rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0-rc.1/Chart.min.js"/>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.5.0"></script>
+        <!--***-->        
+        <title>Crop Web - Lima Sur</title>
+        <style type="text/css">
+            .main-content {
+                padding: 0;
+            }
+            .estiloTituloLink{
+                color: #FFF;
+                font-size: 2.5em;  
+                position: relative;
+                top: 10px;
+            }
+
+            #indexGrowl{
+                z-index: 5000;
+            }
+
+        </style>
+        <!--<f:event type="preRenderView" listener=""/>-->
+
+    </h:head>  
+    <h:body class="main-body">
+
+        <div id="indexGrowl">
+            <p:growl widgetVar="growlId" life="2000"><p:autoUpdate/></p:growl>
+            <p:growl widgetVar="growlIdwIndep" id="growlIdIndep" life="2000"></p:growl>
+            <p:growl id="growl" life="3000" />
+        </div>
+
+        <h:form>
+            <p:confirmDialog  global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton  value="Si" type="button" styleClass="ui-confirmdialog-yes"  />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>
+        </h:form>
+        <div class="layout-wrapper menu-layout-static ">
+
+
+            <!--==========================================
+                      BARRA SUPERIOR
+            ===========================================-->
+            <ui:insert name="top">
+                <h:form>
+                    <div class="topbar clearfix">
+                        <!--Icono-->
+                        <div class="topbar-left">
+                            <div class="logo">
+                                <img src="./../../resou rces/icon/Ultima/logo.png"/>
+                            </div>
+                        </div>
+                        <!--Boton de menu lateral-->
+                        <div class="topbar-right">
+                            <a id="menu-button">
+                                <i class="material-icons">keyboard_arrow_left</i>
+                            </a>
+                            <a id="menu-button">
+                                <i class="material-icons">keyboard_arrow_left</i>
+                            </a>
+                            <ul class="topbar-items fadeInDown animated">
+                                <li class="active-top-menu">
+
+                                    <a>
+                                        <i class="topbar-icon material-icons"></i>
+                                        <span class="topbar-item-name">Settings</span>
+                                    </a>
+
+                                    <ul class="ultima-menu animated fadeInDown">                                        
+                                        <li role="menuitem">
+                                        <h:commandLink  actionListener="#{loginC.cerrar()}">
+                                            <i class="ui-icon ui-icon-power-settings-new"></i>
+                                            <span>Cerrar Sesión</span>
+                                        </h:commandLink>
+                                </li>
+
+                                <li role="menuitem">
+                                <h:link outcome="">
+                                    <i class="ui-icon ui-icon-person"></i>
+                                    <span>Contactanos</span>
+                                </h:link>
+                                </li>
+
+                                <li role="menuitem">
+                                <h:link outcome="">
+                                    <i class="ui-icon ui-icon-recent-actors"></i>
+                                    <span>Manual de Usuario</span>
+                                </h:link>
+                                </li>
+
+                            </ul>
+                            </li>
+                            </ul>
+                        </div>
+                    </div>
+                </h:form>
+            </ui:insert>
+
+
+            <!--==========================================
+            MENU DE USUARIO
+            ===========================================-->  
+
+            <ui:insert name="left">
+
+                <h:form id="menuform">
+                    <div class="layout-menu layout-menu-dark">
+                        <div class="nano">
+                            <div class="nano-content menu-scroll-content">
+                                <div class="profile">
+                                    <div class="profile-image"></div>
+                                    <a id="profile-options" href="#">
+                                        <span class="profile-name"></span>
+                                    </a>
+                                </div>
+
+                                <!--=================================
+                                =====================================
+                                    MENU NORMAL
+                                =====================================
+                                =====================================-->
+
+                                <ul id="menuform" class="ultima-menu clearfix">
+
+                                    <li id="menuform:dashboard" role="menuitem">
+                                    <h:link outcome="Inicio">
+                                        <i class="material-icons">dashboard</i>
+                                        <span>Inicio</span>
+                                    </h:link>
+                                    <div class="layout-menu-tooltip">
+                                        <div class="layout-menu-tooltip-arrow"></div>
+                                        <div class="layout-menu-tooltip-text">Dashboard</div>
+                                    </div>
+                                    </li>
+
+                                    <li id="menuform:description" role="menuitem">
+
+                                    <h:link outcome="Informacion">
+                                        <i class="material-icons">description</i>
+                                        <span>Informacion</span>
+                                    </h:link>
+
+                                    <div class="layout-menu-tooltip">
+                                        <div class="layout-menu-tooltip-arrow"></div>
+                                        <div class="layout-menu-tooltip-text">description</div>
+                                    </div>
+                                    </li>
+
+                                    <li role="menuitem">
+                                        <a href="#" class="ripplelink">
+                                            <i class="material-icons">list</i>
+                                            <span>Registrar</span>
+                                            <span class="ink animate"></span>
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </a>
+                                        <ul role="menu">
+                                            <li id="menuform:um_cultivo" role="menuitem">
+                                            <h:link outcome="Cultivo">
+                                                <i class="material-icons">add</i>
+                                                <span>Cultivo</span>
+                                            </h:link>
+                                    </li>
+                                    <li id="menuform:um_personal" role="menuitem">
+                                    <h:link outcome="Personal">
+                                        <i class="material-icons">portrait</i>
+                                        <span>Personal</span>
+                                    </h:link>
+                                    <!--                                    <h:link outcome="Personal">
+                                                                            <i class="material-icons">portrait</i>
+                                                                            <span>Personal</span>
+                                                                        </h:link>-->
+                                    </li>
+                                    <li id="menuform:um_sector" role="menuitem">
+                                    <h:link outcome="Sector">
+                                        <i class="material-icons">add</i>
+                                        <span>Sector</span>
+                                    </h:link>
+                                    </li>
+                                </ul>
+                                </li>
+
+                                <li role="menuitem">
+                                    <a href="#" class="ripplelink">
+                                        <i class="material-icons">list</i>
+                                        <span>Asignación</span>
+                                        <span class="ink animate"></span>
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </a>
+                                    <ul role="menu">
+
+                                        <li id="menuform:um_asignacioCultivo" role="menuitem">
+                                        <h:link outcome="AsignacionCultivo">
+                                            <i class="material-icons">assignment</i>
+                                            <span>Asignacion Cultivo</span>
+                                        </h:link>
+                                </li>
+                                <li id="menuform:um_asignacioPersonal" role="menuitem">
+                                <h:link outcome="AsignacionPersonal">
+                                    <i class="material-icons">assignment</i>
+                                    <span>Asignacion Personal</span>
+                                </h:link>
+                                </li>
+
+                                </ul>
+                                </li>
+                                </ul>
+                                <script>
+                                    PrimeFaces.cw("Ultima", "me", {id: "menuform"});
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+
+            </ui:insert>
+            <!--==========================================
+                  CONTENIDO
+            =s==========================================-->
+            <div class="layout-main">
+                <div class="main-content">
+                    <ui:insert name="content"></ui:insert>
+                </div>
+                <div class="footer">
+                    <div class="card clearfix">
+                        <span class="footer-text-left">Valle Grande 2019</span>
+                        <span class="footer-text-right"><span class="ui-icon ui-icon-copyright"></span>  <span>All Rights Reserved</span></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>
+
+
+

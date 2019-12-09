@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+        <style>
+        </style>
+        <div class="layout-menu-container" style="z-index: 2000;">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <div class="layout-menu-title" style="font-weight:bold; color: #ffffff">MENU</div>
+                    <form id="menuform" name="menuform">
+                        <input type="hidden" name="menuform" value="menuform" />
+                        <ul id="menuform:j_idt30" class="layout-menu">
+
+                            <li id="menuform:apl_informacion_ver" role="menuitem">
+                                <h:link outcome="/vistas/empresa/LstEmpresa">
+                                    <i class="fa fa-fw fa-institution"></i>
+                                    <span>EMPRESA</span>
+                                </h:link>
+                            </li>   
+
+                            <li id="menuform:apl_mantenimiento" role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-users"></i>
+                                    <span>PERSONAS</span>
+                                    <i class="layout-menuitem-toggler fa fa-fw fa-angle-down"></i>
+                                </a>
+                                <div class="layout-menu-tooltip">
+                                    <div class="layout-menu-tooltip-arrow"></div>
+                                    <div class="layout-menu-tooltip-text"></div>
+                                </div>
+
+                                <ul role="menu">
+                                    <li id="menuform:apl_usuarios" role="menuitem">
+                                        <h:link outcome="/vistas/persona/LstAlumno">
+                                            <i class="fa fa-fw fa-user"></i>
+                                            <span>ALUMNO</span>
+                                        </h:link>
+                                        <div class="layout-menu-tooltip">
+                                            <div class="layout-menu-tooltip-arrow"></div>
+                                            <div class="layout-menu-tooltip-text"></div>
+                                        </div>
+                                    </li>
+                                    <li id="menuform:apl_sectores" role="menuitem">
+                                        <h:link outcome="/vistas/persona/LstProfesional">
+                                            <i class="fa fa-fw fa-user-o"></i>
+                                            <span>PROFESIONAL</span>
+                                        </h:link>
+                                        <div class="layout-menu-tooltip">
+                                            <div class="layout-menu-tooltip-arrow"></div>
+                                            <div class="layout-menu-tooltip-text"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="menuform:apl_asignacion" role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-folder-open"></i>
+                                    <span>DOCUMENTO</span>
+                                    <i class="layout-menuitem-toggler fa fa-fw fa-angle-down"></i>
+                                </a>
+                                <div class="layout-menu-tooltip">
+                                    <div class="layout-menu-tooltip-arrow"></div>
+                                    <div class="layout-menu-tooltip-text"></div>
+                                </div>
+                                <ul role="menu">
+                                    <li id="menuform:apl_usuarios" role="menuitem">
+                                        <h:link outcome="/vistas/tipdoc/LstTipDoc">
+                                            <i class="fa fa-fw fa-file"></i>
+                                            <span>TIPO</span>
+                                        </h:link>
+                                        <div class="layout-menu-tooltip">
+                                            <div class="layout-menu-tooltip-arrow"></div>
+                                            <div class="layout-menu-tooltip-text">Usuarios</div>
+                                        </div>
+                                    </li>
+                                    <li id="menuform:apl_usuarios" role="menuitem">
+                                        <h:link outcome="/vistas/documento/LstDocumento">
+                                            <i class="fa fa-fw fa-file-text"></i>
+                                            <span>REGISTRO</span>
+                                        </h:link>
+                                        <div class="layout-menu-tooltip">
+                                            <div class="layout-menu-tooltip-arrow"></div>
+                                            <div class="layout-menu-tooltip-text"></div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li id="menuform:apl_informacion_ver" role="menuitem">
+                                <h:link outcome="/vistas/Manual/Manual">
+                                    <i class="fa fa-fw fa-book"></i>
+                                    <span>MANUAL</span>
+                                </h:link>
+                            </li>  
+
+                        </ul>
+                        <script id="menuform:j_idt30_s" type="text/javascript">
+                            PrimeFaces.cw("Apollo", "widget_menuform_j_idt30", {
+                                id: "menuform:j_idt30"
+                            });
+                        </script>
+
+                        <input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:27" value="2978068702302888461:1022293285199536944" autocomplete="off" />
+                    </form>
+
+                    <div class="nano-scroll-footer"></div>
+                </div>
+            </div>
+        </div>
+    </ui:composition>
+</html>
+

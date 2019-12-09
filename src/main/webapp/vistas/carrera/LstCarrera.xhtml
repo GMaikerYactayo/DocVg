@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <h:head>
+        <title>Registro de Matricula</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../Template/Template.xhtml">
+            <ui:define name="contenido">
+                <p:growl autoUpdate="true" showDetail="true" id="messages" />
+                <center>
+                    <h:form id="formIns">
+                        <h1 style="margin-top:0">Registrar Carrera</h1>
+                        <p:panelGrid columns="4">   
+                            <p:outputLabel value="Año"/>
+                            <p:inputText value="#{carreraC.carrera.YEARCAR}" maxlength="4" 
+                                         required="true" requiredMessage="Se necesita el año" >
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                        </p:panelGrid>         
+                        <p:commandButton value="Registrar" actionListener="#{carreraC.registrar()}" icon="ui-icon-check" update="formIns :form:dtTable"/> 
+                    </h:form>
+                </center>
+
+                <p:spacer/>
+                <h:form id="form">
+                    <p:dataTable value="#{carreraC.listadorCar}" 
+                                 var="lista" 
+                                 id="dtTable" 
+                                 selectionMode="single"
+                                 filteredValue="#{carreraC.listadoCar2}"
+                                 paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" 
+                                 rowKey="#{lista.CODCAR}"
+                                 rows="8" 
+                                 selection="#{carreraC.select}"
+                                 style="margin-bottom:20px">
+
+                        <f:facet name="header">
+                            CARRERAS
+                        </f:facet>
+
+                        <p:column headerText="Año"  filterMatchMode="contains" >
+                            <center>
+                                <h:outputText value="#{lista.YEARCAR}" />
+                            </center>
+                        </p:column>
+                        <p:column headerText="Nombre" >
+                            <center>
+                                <h:outputText value="#{lista.NOMCAR}" />
+                            </center>
+                        </p:column>
+                        <p:column headerText="Abreviatura" >
+                            <center>
+                                <h:outputText value="#{lista.ABRCAR}" />
+                            </center>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(carreraC.listadorCar)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable>
+                    <p:contextMenu for="dtTable">
+                        <p:menuitem value="Modificar" update=":dlgDatos" icon="ui-icon-pencil"  oncomplete="PF('wdlgDatos').show()"/>
+                        <p:menuitem value="Eliminar" update=":messages :form" icon="ui-icon-circle-close" action="#{carreraC.eliminar()}"/>
+                    </p:contextMenu>
+
+                </h:form>
+                <p:dialog id="dlgDatos" widgetVar="wdlgDatos" >
+                    <h:form>
+                        <p:panelGrid columns="4">
+                            <p:outputLabel value="Año"/>
+                            <p:inputText value="#{carreraC.select.YEARCAR}" maxlength="4" required="true" requiredMessage="Se necesita el año" >
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                        </p:panelGrid>
+                        <p:commandButton value="Actualizar" actionListener="#{carreraC.modificar()}"
+                                         update=":form :messages" oncomplete="PF('wdlgDatos').hide();">
+                            <p:tooltip trackMouse="true"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                        <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

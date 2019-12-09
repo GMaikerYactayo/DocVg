@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!--===============================================================================================-->	
+        <a href="../../resources/images/icons/favicon.ico"></a>
+        <!--===============================================================================================-->
+        <link href="../../resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/fonts/Linearicons-Free-v1.0.0/icon-font.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/fonts/iconic/css/material-design-iconic-font.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/vendor/animate/animate.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->	
+        <link href="../../resources/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/vendor/animsition/css/animsition.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/vendor/select2/select2.min.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->	
+        <link href="../../resources/vendor/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+        <link href="../../resources/css/util.css" rel="stylesheet" type="text/css"/>
+        <link href="../../resources/css/main.css" rel="stylesheet" type="text/css"/>
+        <!--===============================================================================================-->
+    </head>
+
+    <body style="background-color: #999999;">
+
+        <div class="limiter">
+            <div class="container-login100">
+                <div class="login100-more" style="background-image: url('../../resources/images/Fondos_1.png');"></div>
+
+                <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+                    <p:growl showDetail="true" id="message"/>
+                    <h:form id="form" class="login100-form validate-form">
+                        <span class="login100-form-title p-b-59">
+                            Login
+                        </span>
+                        <div class="wrap-input100 validate-input" data-validate="Se requiere usuario">
+                            <span class="label-input100">Username</span>
+                            <p:inputText value="#{loginC.USEUSU}" class="input100" style="font-size: initial; width: 200px"  placeholder="Usuario"  required="true" requiredMessage="USUARIO INCORRECTO"/> 
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate = "Se requiere password">
+                            <span class="label-input100">Password</span>
+                            <p:inputText type="password" value="#{loginC.PSWUSU}" class="input100" style="font-size: initial; width: 200px" placeholder="Contraseña" required="true" requiredMessage="CONTRASEÑA INCORRECTA"/>           
+                            <span class="focus-input100"></span>
+                        </div>
+                        
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <p:commandButton id="entrar" class="login100-form-btn"  title="INGRESAR" actionListener="#{loginC.startSession()}" update=":message form" ></p:commandButton>
+                            </div>
+                        </div>
+                        
+                        <p:blockUI block="form" trigger="entrar"/>
+                    </h:form>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!--===============================================================================================-->
+        <script src="../../resources/vendor/jquery/jquery-3.2.1.min.js" type="text/javascript"></script>
+        <!--===============================================================================================-->
+        <script src="../../resources/vendor/animsition/js/animsition.min.js" type="text/javascript"></script>
+        <!--===============================================================================================-->
+        <script src="../../resources/vendor/bootstrap/js/popper.js" type="text/javascript"></script>
+        <script src="../../resources/vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <!--===============================================================================================-->
+        <script src="../../resources/vendor/select2/select2.min.js" type="text/javascript"></script>
+        <!--===============================================================================================-->
+        <script src="../../resources/vendor/daterangepicker/moment.min.js" type="text/javascript"></script>
+        <script src="../../resources/vendor/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+        <!--===============================================================================================-->
+        <script src="vendor/countdowntime/countdowntime.js"></script>
+        <!--===============================================================================================-->
+        <script src="../../resources/js/main.js" type="text/javascript"></script>
+    </body>
+</html>

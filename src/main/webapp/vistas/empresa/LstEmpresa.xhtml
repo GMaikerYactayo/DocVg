@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <h:head>
+        <title>Registro de Empresa</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="../Template/Template.xhtml">
+            <ui:define name="content">
+                <p:growl showDetail="true" id="messages" />
+                <center>
+                    <h:form id="formIns">
+                        <h1 style="margin-top:0">
+                            REGISTRAR EMPRESA
+                        </h1>
+                        <p:panelGrid columns="2">
+                            <p:outputLabel for="Soc" value="Razón social: " style="font-weight:bold"/>
+                            <p:inputText id="Soc" value="#{empresaC.empresa.RAZSOCEMP}" onkeyup="this.value = this.value.toUpperCase()" size="40" maxlength="50" required="true" requiredMessage="Se reqiuere razon social"/>
+                            <p:outputLabel for="Ruc" value="RUC: " style="font-weight:bold"/>
+                            <p:inputText id="Ruc" value="#{empresaC.empresa.RUCEMP}" maxlength="11" required="true" requiredMessage="Se reqiuere el ruc">
+                                <p:keyFilter regEx="/[0-9]/"/>
+                            </p:inputText>
+                            <p:outputLabel for="Dis" value="Distrito: " style="font-weight:bold"/>
+                            <p:autoComplete id="Dis" value="#{empresaC.empresa.CODUBI}" size="40" completeMethod="#{empresaC.completeTextUbigeo}" 
+                                            required="true" requiredMessage="Se requiere el distrito"/>
+                        </p:panelGrid>
+                        <p:commandButton value="Registrar" actionListener="#{empresaC.registrar()}" update="formIns :form:dtTable"/>
+                        <p:button id="btn" value="Registrar profesional" outcome="/vistas/persona/LstProfesional.xhtml"/> 
+                    </h:form>
+                </center>
+
+                <div align="right">
+                    <h:form id="estadosEmpresa">
+                        <p:commandButton value="Activo"
+                                         id="btnActivo"
+                                         style="background: black"
+                                         oncomplete="PF('TIPO').clearFilters()"
+                                         actionListener="#{empresaC.listarEstado('A')}"
+                                         update=":form:dtTable"/>
+
+                        <p:commandButton value="Inactivo"
+                                         style="background: black"
+                                         id="btnInactivo"
+                                         oncomplete="PF('TIPO').clearFilters()"
+                                         actionListener="#{empresaC.listarEstado('I')}"
+                                         update=":form:dtTable"/>
+                    </h:form>
+                </div>
+
+                <p:spacer/>
+                <h:form id="form">
+                    <p:dataTable value="#{empresaC.listadoEstado}" 
+                                 var="lista" 
+                                 id="dtTable" 
+                                 widgetVar="TIPO"
+                                 sortBy="#{lista.RAZSOCEMP}"
+                                 selectionMode="single"
+                                 filteredValue="#{empresaC.listadoEmp2}"
+                                 selection="#{empresaC.select}"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 paginator="true" 
+                                 emptyMessage="No hay registro"
+                                 rowKey="#{lista.CODEMP}"
+                                 rows="10" 
+                                 style="margin-bottom:20px">
+
+                        <f:facet name="header">
+                            <div align="right">
+                                <h:commandLink rendered="#{empresaC.bt}" actionListener="#{empresaC.REPORTE_PDF_EMPRESA(CodigoEMPRESA)}" >
+                                    <p:graphicImage url="../../icon/PDF-logo.png" width="50" title="Descargar Reporte"/>
+                                </h:commandLink>
+                            </div>
+                            EMPRESAS
+                        </f:facet>
+
+                        <p:column headerText="RUC" filterBy="#{lista.RUCEMP}" filterMatchMode="contains" style="width: 110px;text-align:center">
+                            <h:outputText value="#{lista.RUCEMP}" />
+                        </p:column>
+                        <p:column headerText="RAZÓN SOCIAL" style="text-align:center" filterBy="#{lista.RAZSOCEMP}" filterMatchMode="contains">
+                            <h:outputText value="#{lista.RAZSOCEMP}" />
+                        </p:column>
+                        <p:column headerText="DISTRITO" style="text-align:center" >
+                            <h:outputText value="#{lista.CODUBI}" />
+                        </p:column>
+
+                        <f:facet name="footer">
+                            EN TOTAL HAY #{fn:length(empresaC.listadoEstado)} REGISTROS.
+                        </f:facet>
+                    </p:dataTable>
+                    <p:contextMenu id="Botones" for="dtTable">
+                        <p:autoUpdate/>
+                        <p:menuitem value="Modificar" update=":dlgDatos" rendered="#{empresaC.bt}" icon="ui-icon-pencil"  oncomplete="PF('wdlgDatos').show()"/>
+                        <p:menuitem value="Desactivar" update=":messages :form:dtTable" oncomplete="PF('TIPO').clearFilters()" rendered="#{empresaC.bt}" icon="ui-icon-circle-close" action="#{empresaC.eliminar()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas eliminar?" icon="fa fa-fw fa-exclamation-triangle"/>
+                        </p:menuitem>
+                        <p:menuitem value="Activar" rendered="#{!empresaC.bt}" update=":messages :form:dtTable" 
+                                    icon="ui-icon-circle-check" oncomplete="PF('TIPO').clearFilters()" action="#{empresaC.activar()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas activar?" />
+                        </p:menuitem>
+                    </p:contextMenu>
+
+                </h:form>
+                <p:dialog id="dlgDatos" modal="true" widgetVar="wdlgDatos" >
+                    <center>
+                        <h1 style="margin-top:0">
+                            ACTUALIZAR EMPRESA
+                        </h1>
+                        <h:form>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Razón social: " style="font-weight:bold"/>
+                                <p:inputText value="#{empresaC.select.RAZSOCEMP}" onkeyup="this.value = this.value.toUpperCase()" size="40" maxlength="50" required="true" requiredMessage="Se reqiuere razon social"/>
+                                <p:outputLabel value="RUC: " style="font-weight:bold"/>
+                                <p:inputText value="#{empresaC.select.RUCEMP}" maxlength="11" required="true" requiredMessage="Se reqiuere el ruc">
+                                    <p:keyFilter regEx="/[0-9]/"/>
+                                </p:inputText>
+                                <p:outputLabel value="Distrito: " style="font-weight:bold"/>
+                                <p:autoComplete  value="#{empresaC.select.CODUBI}" size="40" completeMethod="#{empresaC.completeTextUbigeo}" 
+                                                 required="true" requiredMessage="Se requiere el distrito"/>
+                            </p:panelGrid>
+                            <p:commandButton value="Actualizar" actionListener="#{empresaC.modificar()}" update=":messages :form:dtTable"
+                                             oncomplete="if(args &amp;&amp; !args.validationFailed)PF('wdlgDatos').hide();PF('TIPO').clearFilters()">
+                                <p:tooltip trackMouse="true"/>
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();"/>
+                        </h:form>
+                    </center>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

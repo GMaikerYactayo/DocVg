@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    <h:head>
+        <title>Registro de Aula</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="../Template/Template.xhtml">
+            <ui:define name="content">
+                <p:growl showDetail="true" id="messages"/>
+                <h:form>
+                    <p:dataTable var="doc" value="#{documentoC.listadoDocu}">
+                        <f:facet name="header">
+                            DOCUMENTO
+                        </f:facet> 
+                        <p:column headerText="CÓDIGO" style="text-align:center" width="70">
+                            <h:outputText value="#{doc.IDDOC}" />
+                        </p:column>
+
+                        <p:column headerText="FECHA DEL DOCUMENTO" style="width: 150px;text-align:center">
+                            <h:outputText value="#{doc.FECDOC}" />
+                        </p:column>                   
+
+                        <p:column headerText="ASUNTO" style="text-align:center">
+                            <h:outputText value="#{doc.CODTIPDOC}" />
+                        </p:column>
+
+                        <p:column headerText="EMPRESA - EXTERNO" style="text-align:center">
+                            <h:outputText value="#{doc.CODPER}" />
+                        </p:column>                   
+
+                        <p:column style="width:40px;text-align: center">
+                            <p:commandButton id="Asi" update="" style="background: #0076c5" oncomplete="PF('wdlgAsignar').show()" icon="fa fa-fw fa-user-plus" />
+                            <p:tooltip style="background: ligthcyan" for="Asi" value="Asignar alumnos"
+                                       showEffect="clip" position="left"/> 
+                        </p:column>
+
+                        <p:column style="width:40px;text-align: center">
+                            <p:commandButton id="AsiM" update="" style="background: #0076c5" oncomplete="PF('wdlgAsignarM').show()" icon="fa fa-fw fa-user-plus" />
+                            <p:tooltip style="background: ligthcyan" for="AsiM" value="Asignar monitores"
+                                       showEffect="clip" position="left"/> 
+                        </p:column>
+
+                        <p:column style="width: 140px">
+                            <p:commandButton id="Doc" value="Doc." style="background: #ff3300" icon="fa fa-fw fa-file-pdf-o"  actionListener="#{documentoC.REPORTE_PDF_PRACTICA(doc.CODTIPDOC,doc.IDDOC)}" ajax="false"/>
+                            <p:tooltip id="toolTipDoc" for="Doc" value="Generar reporte" position="top"/>
+                            <p:commandButton id="Grupo" value="Grupo" style="background: #ff3300" icon="fa fa-fw fa-file-pdf-o"  actionListener="#{documentoC.REPORTE_PDF_GRUPO(doc.CODTIPDOC,doc.IDDOC)}" ajax="false"/>
+                            <p:tooltip id="toolTipGrupo" for="Grupo" value="Generar reporte" position="top"/>                        
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <p:spacer/>
+
+                <p:dialog id="dlgAsignar" modal="true" widgetVar="wdlgAsignar" >
+                    <h:form id="form">
+                        <p:dataTable value="#{aulaC.listadoDetAul}" 
+                                     var="lista" 
+                                     widgetVar="WID"
+                                     id="dtTable" 
+                                     sortBy="#{lista.MODULO}"
+                                     filteredValue="#{aulaC.listadoDetAul2}"
+                                     paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" 
+                                     selection="#{documentoC.selects}"
+                                     rowKey="#{lista.COD_DET_AUL}"
+                                     rows="15" 
+                                     style="margin-bottom:20px;width: 1000px">
+
+                            <f:facet name="header">
+                                ALUMNOS
+                            </f:facet> 
+
+                            <p:column selectionMode="multiple" rendered="true" style="width:5px;text-align:center"/>
+
+                            <p:column headerText="MÓDULO" filterBy="#{lista.MODULO}" style="width: 20px; text-align:center">
+                                <f:facet name="filter">
+                                    <p:selectOneMenu style="width: 100px" onchange="PF('WID').filter()" styleClass="custom-filter" >
+                                        <f:selectItem itemLabel="TODO" itemValue="#{null}" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="M1" itemValue="M1" />
+                                        <f:selectItem itemLabel="M2" itemValue="M2" />
+                                        <f:selectItem itemLabel="M3" itemValue="M3" />
+                                    </p:selectOneMenu>
+                                </f:facet>
+                                <h:outputText value="#{lista.MODULO}" />
+                            </p:column>
+                            <p:column headerText="SEMESTRE" style="width: 20px; text-align:center">
+                                <h:outputText value="#{lista.SEMESTRE}" />
+                            </p:column>
+                            <p:column headerText="NOMBRES Y APELLIDOS" style="width: 100px; text-align:center">
+                                <h:outputText value="#{lista.PERSONA}" />
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:commandButton  update="@form :formGru" oncomplete="PF('wdlgAsignar').hide();PF('WID').clearFilters()"
+                                                  icon="fa fa-fw fa-check-circle" value="ASIGNAR"  
+                                                  actionListener="#{documentoC.asignar()}" >
+                                    <p:confirm header="CONFIRMACIÓN" message="¿Deseas asignar?"/>
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" icon="ui-icon-circle-close" immediate="true" oncomplete="PF('wdlgAsignar').hide();"/>
+                                <br/>
+                                EN TOTAL HAY #{fn:length(aulaC.listadoDetAul)} REGISTROS.
+                            </f:facet>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:dialog>
+                <p:spacer/>
+
+                <h:form>
+                    <p:ajaxStatus onstart="PF('EstadoDialogo').show()"
+                                  onsuccess="PF('EstadoDialogo').hide()" />
+                    <p:dialog style=" box-shadow: none;
+                              background-color: transparent;
+                              border-color: transparent"
+                              widgetVar="EstadoDialogo"
+                              modal="true"
+                              draggable="false"
+                              closable="false"
+                              resizable="false"
+                              showHeader="false">
+                        <center>
+                            <p:graphicImage name="/images/cargaaaa.gif"
+                                            style="display:block;" width="50%" height="50%"/>
+                        </center>
+                    </p:dialog>
+                </h:form>
+
+                <p:dialog id="dlgAsignarM" modal="true" widgetVar="wdlgAsignarM" >
+                    <h:form id="formM">
+                        <p:dataTable value="#{aulaC.listadoMonitor}" 
+                                     var="listaM" 
+                                     id="dtTableM" 
+                                     widgetVar="TIPO"
+                                     filteredValue="#{aulaC.listadoMonitor}"
+                                     paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" 
+                                     selection="#{documentoC.selects}"
+                                     rowKey="#{listaM.COD_DET_AUL}"
+                                     rows="15" 
+                                     style="margin-bottom:20px;width: 600px">
+
+                            <f:facet name="header">
+                                MONITORES
+                            </f:facet> 
+
+                            <p:column selectionMode="multiple" rendered="true" style="width:5px;text-align:center"/>
+
+                            <p:column headerText="NOMBRES Y APELLIDOS"   style="width: 100px; text-align:center">
+                                <h:outputText value="#{listaM.PERSONA}" />
+                            </p:column>
+
+                            <f:facet name="footer">
+                                <p:commandButton  update="@form :formGru" oncomplete="PF('wdlgAsignarM').hide();PF('TIPO').clearFilters()"
+                                                  icon="fa fa-fw fa-check-circle" value="ASIGNAR"  
+                                                  actionListener="#{documentoC.asignar()}" >
+                                    <p:confirm header="CONFIRMACIÓN" message="¿Deseas asignar?"/>
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" icon="ui-icon-circle-close" immediate="true" oncomplete="PF('wdlgAsignarM').hide();"/>
+                                <br/>
+                                EN TOTAL HAY #{fn:length(aulaC.listadoMonitor)} REGISTROS.
+                            </f:facet>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:dialog>
+
+                <h:form id="formGru">
+                    <p:dataTable var="doc" id="dtTableA" 
+                                 filteredValue="#{documentoC.listadoGruDoc3}" 
+                                 selectionMode="single" rowKey="#{doc.CODDETDOC}" 
+                                 selection="#{documentoC.select}" 
+                                 widgetVar="GRUPO"
+                                 emptyMessage="No hay alumnos asignados" 
+                                 value="#{documentoC.listadoGruDoc}">
+                        <f:facet name="header">
+                            GRUPO
+                        </f:facet> 
+                        <p:autoUpdate/>
+                        <p:column headerText="ITEM" style="width:55px; text-align:center">
+                            <h:outputText value="#{doc.NRO}" style="font-weight:bold"/>
+                        </p:column>
+                        <p:column headerText="NOMBRES Y APELLIDOS" filterBy="#{doc.PERSONA}" filterMatchMode="contains" style="text-align:center">
+                            <h:outputText value="#{doc.PERSONA}" />
+                        </p:column>
+                        <p:column headerText="DNI" style="text-align:center">
+                            <h:outputText value="#{doc.DNI}" />
+                        </p:column>
+                        <p:column headerText="TIPO" style="text-align:center">
+                            <h:outputText value="#{doc.TIPO}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:contextMenu id="Botones" for="dtTableA">
+                        <p:autoUpdate/>
+                        <p:menuitem value="Eliminar" update=":messages :formGru:dtTableA" oncomplete="PF('GRUPO').clearFilters()" icon="ui-icon-circle-close" action="#{documentoC.eliminarA()}">
+                            <p:confirm header="CONFIRMACIÓN" message="¿Deseas eliminar?" icon="fa fa-fw fa-exclamation-triangle"/>
+                        </p:menuitem>
+                    </p:contextMenu>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
